@@ -16,6 +16,7 @@ def format_arrangement(data: dict) -> dict:
         "price": data["price"],
         "category_id": data.get("category_id"),
         "views": data.get("views", 0),
+        "likes": data.get("likes", 0),
         "photos": photos,
         "created_at": data["created_at"]
     }

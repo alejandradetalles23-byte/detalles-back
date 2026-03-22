@@ -23,5 +23,6 @@ class ArrangementOut(BaseModel):
     price: float
     category_id: Optional[int] = None
     views: int = 0
+    likes: int = 0
     photos: List[str]
     created_at: str
