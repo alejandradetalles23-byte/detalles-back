@@ -7,7 +7,10 @@ app = FastAPI(title="API Alejandra Detalles")
 # Configurar CORS (ajustar origins según sea necesario)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://alejandra-detalles.netlify.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
