@@ -70,15 +70,18 @@ async def update_settings(
     if footer_text is not None:
         updates.append({"key": "footer_text", "value": footer_text})
     
-    if logo and logo.filename:
-        logo_url = await upload_image(logo)
-        updates.append({"key": "logo_url", "value": logo_url})
-    
-    if avatar and avatar.filename:
-        avatar_url = await upload_image(avatar)
-        updates.append({"key": "admin_avatar_url", "value": avatar_url})
+    try:
+        if logo and logo.filename:
+            logo_url = await upload_image(logo)
+            updates.append({"key": "logo_url", "value": logo_url})
+        
+        if avatar and avatar.filename:
+            avatar_url = await upload_image(avatar)
+            updates.append({"key": "admin_avatar_url", "value": avatar_url})
 
-    for update in updates:
-        supabase.table("site_settings").upsert(update, on_conflict="key").execute()
-    
-    return {"message": "Configuración actualizada"}
+        for update in updates:
+            supabase.table("site_settings").upsert(update, on_conflict="key").execute()
+        
+        return {"message": "Configuración actualizada"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

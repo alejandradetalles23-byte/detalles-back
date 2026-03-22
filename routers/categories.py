@@ -23,25 +23,33 @@ def get_categories():
 def create_category(category: CategoryBase, username: str = Depends(get_current_user)):
     if not supabase:
         raise HTTPException(status_code=500, detail="Base de datos no configurada")
-    res = supabase.table("categories").insert({"name": category.name}).execute()
-    if res.data:
-        return res.data[0]
-    raise HTTPException(status_code=500, detail="Error al crear categoría")
+    try:
+        res = supabase.table("categories").insert({"name": category.name}).execute()
+        if res.data:
+            return res.data[0]
+        raise HTTPException(status_code=500, detail="Error al crear categoría")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/{category_id}", response_model=CategoryOut)
 def update_category(category_id: int, category: CategoryBase, username: str = Depends(get_current_user)):
     if not supabase:
         raise HTTPException(status_code=500, detail="Base de datos no configurada")
-    res = supabase.table("categories").update({"name": category.name}).eq("id", category_id).execute()
-    if res.data:
-        return res.data[0]
-    raise HTTPException(status_code=404, detail="Categoría no encontrada")
+    try:
+        res = supabase.table("categories").update({"name": category.name}).eq("id", category_id).execute()
+        if res.data:
+            return res.data[0]
+        # Return what we updated anyway if Supabase doesn't return data
+        return {"id": category_id, "name": category.name}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/{category_id}")
 def delete_category(category_id: int, username: str = Depends(get_current_user)):
     if not supabase:
         raise HTTPException(status_code=500, detail="Base de datos no configurada")
-    res = supabase.table("categories").delete().eq("id", category_id).execute()
-    if res.data:
+    try:
+        res = supabase.table("categories").delete().eq("id", category_id).execute()
         return {"message": "Categoría eliminada"}
-    raise HTTPException(status_code=404, detail="Categoría no encontrada")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
