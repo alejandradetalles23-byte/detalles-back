@@ -39,3 +39,16 @@ CREATE POLICY "Public delete" ON arrangements FOR DELETE USING (true);
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public select users" ON users FOR SELECT USING (true);
 CREATE POLICY "Public update users" ON users FOR UPDATE USING (true);
+
+-- 5. Crear tabla de configuraciones del sitio
+CREATE TABLE IF NOT EXISTS site_settings (
+    key VARCHAR(255) PRIMARY KEY,
+    value TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Habilitar RLS para site_settings
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public select settings" ON site_settings FOR SELECT USING (true);
+CREATE POLICY "Public insert settings" ON site_settings FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update settings" ON site_settings FOR UPDATE USING (true);
