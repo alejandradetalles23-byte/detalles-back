@@ -11,6 +11,7 @@ app.add_middleware(
         "http://localhost:5173",
         "https://alejandra-detalles.netlify.app"
     ],
+    allow_origin_regex=r"https://.*alejandra-detalles\.netlify\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
