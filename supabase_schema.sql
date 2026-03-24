@@ -52,3 +52,20 @@ ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public select settings" ON site_settings FOR SELECT USING (true);
 CREATE POLICY "Public insert settings" ON site_settings FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public update settings" ON site_settings FOR UPDATE USING (true);
+
+-- 6. Crear tabla de comentarios para los arreglos
+CREATE TABLE IF NOT EXISTS comments (
+    id SERIAL PRIMARY KEY,
+    arrangement_id INT REFERENCES arrangements(id) ON DELETE CASCADE,
+    author_name VARCHAR(100) NOT NULL,
+    content TEXT NOT NULL,
+    is_approved BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Habilitar RLS para comentarios
+ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public select comments" ON comments FOR SELECT USING (is_approved = true);
+CREATE POLICY "Public insert comments" ON comments FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public update comments" ON comments FOR UPDATE USING (true);
+CREATE POLICY "Public delete comments" ON comments FOR DELETE USING (true);
